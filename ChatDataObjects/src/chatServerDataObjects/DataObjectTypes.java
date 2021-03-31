@@ -1,0 +1,19 @@
+package chatServerDataObjects;
+
+public enum DataObjectTypes {
+    AUTH,
+    AUTH_PASSED,
+    AUTH_ERROR,
+    ERROR,
+    CONNECTED_USERS_LIST,
+    SERVER_MSG,
+    PRIVATE_MSG,
+    PUBLIC_MSG,
+    DISCONNECT,
+    ADD_NEW_USER_TO_LIST,
+    REMOVE_USER_FROM_LIST,
+    CHANGE_USERNAME,
+    CHANGE_USERNAME_SUCCESS,
+    CHANGE_USERNAME_ERROR
+
+}
