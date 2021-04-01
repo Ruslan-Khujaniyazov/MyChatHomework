@@ -8,15 +8,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 
 public class ChatHistoryManager {
 
     private final static int LINES_TO_READ = 99;
-    //private static final int COUNT_LAST_LINES = 50;
 
     private static Path historyPath;
 
-    public static void writeToHistory(/*String login, */String message) {
+    public static void writeToHistory(String message) {
 
         try {
             Files.write(historyPath, (message + System.lineSeparator()).getBytes(), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
@@ -25,27 +25,26 @@ public class ChatHistoryManager {
         }
     }
 
+    //чтение всего файла, а затем последних строк
 /*    public static String readLastLinesFromHistory() {
-        //List<String> lastHistoryLines = new ArrayList<>();
         StringBuilder lastHistoryLines = new StringBuilder();
 
         try {
             List<String> allHistoryLines = Files.readAllLines(historyPath, StandardCharsets.UTF_8);
-            int startIndex = allHistoryLines.size() - 1;
-            int endIndex;
+            int endIndex = allHistoryLines.size() - 1;
+            int startIndex;
 
             if(allHistoryLines.size() == 0) {
                 return null;
 
             } else if (allHistoryLines.size() < LINES_TO_READ) {
-                endIndex = 0;
+                startIndex = 0;
             } else {
-                endIndex = startIndex - LINES_TO_READ;
+                startIndex = endIndex - LINES_TO_READ;
             }
 
-            for (int i = endIndex; i >= startIndex ; i++) {
-                lastHistoryLines.append(allHistoryLines.get(i));
-                    //lastHistoryLines.add(allHistoryLines.get(i));
+            for (int i = startIndex; i <= endIndex ; i++) {
+                lastHistoryLines.append(allHistoryLines.get(i)).append(System.lineSeparator());
             }
 
             //return lastHistoryLines.toString();
@@ -54,13 +53,12 @@ public class ChatHistoryManager {
             e.printStackTrace();
         }
 
-        //NetworkClient.showErrorMessage("", String.valueOf(lastHistoryLines.size()), "");
-        //return lastHistoryLines;
         return String.valueOf(lastHistoryLines);
     }*/
 
+    //чтение последних строк без чтения всего файла
     public static String readLastLinesFromHistory() {
-        int n = LINES_TO_READ;//COUNT_LAST_LINES;
+        int linesToRead = LINES_TO_READ;
 
         StringBuilder builder = new StringBuilder();
         try(RandomAccessFile raf = new RandomAccessFile(historyPath.toString(), "r")) {
@@ -69,7 +67,7 @@ public class ChatHistoryManager {
 
             for (long i = pos - 1; i >= 0; i--) {
                 raf.seek(i);
-                if((char) raf.read() == '\n' && --n == 0) {
+                if((char) raf.read() == '\n' && --linesToRead == 0) {
                     break;
                 }
             }

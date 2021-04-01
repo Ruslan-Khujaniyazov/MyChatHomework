@@ -54,11 +54,10 @@ public class ChatController {
         this.network = network;
     }
 
-    public void setChatHistory(/*List<String>*/ String lastLinesOfHistory) {
+    public void setChatHistory(String lastLinesOfHistory) {
         if(lastLinesOfHistory != null) {
-            chatHistory.appendText(lastLinesOfHistory);
-            //chatHistory.setText(String.valueOf(lastLinesOfHistory));
 
+            chatHistory.appendText(lastLinesOfHistory);
         }
     }
 
