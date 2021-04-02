@@ -95,10 +95,10 @@ public class NetworkClient extends Application {
 
     public void openMainChatWindow() {
         authStage.close();
-        primaryStage.show();
-        //primaryStage.setAlwaysOnTop(true);
         chatController.setLabel(network.getUsername());
         chatController.setChatHistory(ChatHistoryManager.readLastLinesFromHistory());
+        primaryStage.show();
+        //primaryStage.setAlwaysOnTop(true);
         network.waitMessage(chatController);
         chatController.appendMessage("Connection established!");
     }

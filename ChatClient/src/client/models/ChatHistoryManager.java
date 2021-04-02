@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ChatHistoryManager {
 
-    private final static int LINES_TO_READ = 99;
+    private final static int LINES_TO_READ = 100;
 
     private static Path historyPath;
 
@@ -32,14 +32,13 @@ public class ChatHistoryManager {
         try {
             List<String> allHistoryLines = Files.readAllLines(historyPath, StandardCharsets.UTF_8);
             int endIndex = allHistoryLines.size() - 1;
-            int startIndex;
+            int startIndex = 0;
 
             if(allHistoryLines.size() == 0) {
                 return null;
 
-            } else if (allHistoryLines.size() < LINES_TO_READ) {
-                startIndex = 0;
-            } else {
+            } else if (allHistoryLines.size() > LINES_TO_READ) {
+
                 startIndex = endIndex - LINES_TO_READ;
             }
 
