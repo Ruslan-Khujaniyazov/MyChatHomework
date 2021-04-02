@@ -74,7 +74,7 @@ public class ChatHistoryManager {
             byte[] buffer = new byte[8192];
             int countRead;
             while((countRead = raf.read(buffer)) > 0) {
-                builder.append(new String(buffer, 0, countRead, StandardCharsets.UTF_8)).append("\n");
+                builder.append(new String(buffer, 0, countRead, StandardCharsets.UTF_8)).append(System.lineSeparator());
             }
 
             return builder.toString();
