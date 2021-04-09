@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.ChatController">
+<AnchorPane prefHeight="400.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controllers.ChatController">
     <children>
         <SplitPane dividerPositions="0.3" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <items>
@@ -20,7 +20,12 @@
                     <children>
                   <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                              <ListView fx:id="usersList" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="170.0" style="-fx-background-color: MintCream;" />
+                        <Label opacity="0.5" prefHeight="40.0" prefWidth="177.0" text="Left-click on User's nickname to send private message" textAlignment="CENTER" textFill="#645f5f" wrapText="true">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                              <ListView fx:id="usersList" minHeight="-Infinity" minWidth="-Infinity" prefHeight="311.0" prefWidth="177.0" style="-fx-background-color: MintCream;" />
                         <SplitPane dividerPositions="0.5" prefHeight="58.0" prefWidth="177.0">
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
