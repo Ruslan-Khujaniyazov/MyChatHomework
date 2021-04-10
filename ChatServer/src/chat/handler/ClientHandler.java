@@ -12,6 +12,8 @@ import java.io.*;
 import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ClientHandler {
 
@@ -36,6 +38,8 @@ public class ClientHandler {
         out = new ObjectOutputStream(clientSocket.getOutputStream());
         in = new ObjectInputStream(clientSocket.getInputStream());
 
+        ExecutorService executorService = Executors.newCachedThreadPool();
+
         closeConnectionOnTimer = new TimerTask() {
             @Override
             public void run() {
@@ -51,7 +55,7 @@ public class ClientHandler {
 
         new Timer().schedule(closeConnectionOnTimer, 120000);
 
-        new Thread(() -> {
+        executorService.execute(() -> {
             try {
                 authentication();
                 //ожидание и чтение сообщений
@@ -60,7 +64,7 @@ public class ClientHandler {
                 e.printStackTrace();
                 System.out.println(e.getMessage());
             }
-        }).start();
+        });
     }
 
     private void authentication() throws IOException {
