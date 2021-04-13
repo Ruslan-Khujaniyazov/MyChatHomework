@@ -1,13 +1,17 @@
 package chat.auth;
 
+
+import java.util.logging.Logger;
+
 public class BaseAuthService implements AuthService {
 
     private final SqliteDBConnection sqliteDBConnection = SqliteDBConnection.getInstance();
-
+    private static final Logger logger = Logger.getLogger(BaseAuthService.class.getName());
 
     @Override
     public void start() {
         System.out.println("Authentication service is running");
+        logger.info("Authentication service is running");
     }
 
     @Override

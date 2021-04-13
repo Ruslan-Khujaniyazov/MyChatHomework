@@ -1,20 +1,23 @@
 package chat.auth;
 
 import java.sql.*;
+import java.util.logging.Logger;
 
 public class SqliteDBConnection implements AutoCloseable {
     private static SqliteDBConnection instance;
     private static Connection connection;
+    private static final Logger logger = Logger.getLogger(SqliteDBConnection.class.getName());
 
-    private SqliteDBConnection() { }
+    private SqliteDBConnection() {
+    }
 
     public static SqliteDBConnection getInstance() {
-      if(instance == null) {
-          loadDriverAndOpenConnection();
-          instance = new SqliteDBConnection();
-      }
+        if (instance == null) {
+            loadDriverAndOpenConnection();
+            instance = new SqliteDBConnection();
+        }
 
-      return instance;
+        return instance;
     }
 
     private static void loadDriverAndOpenConnection() {
@@ -22,6 +25,7 @@ public class SqliteDBConnection implements AutoCloseable {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:User.db");
         } catch (SQLException | ClassNotFoundException e) {
+            logger.severe("Database connection failed!" + e.getMessage());
             System.err.println("Database connection failed!");
             e.printStackTrace();
         }
@@ -31,11 +35,12 @@ public class SqliteDBConnection implements AutoCloseable {
         String query = String.format("SELECT * FROM user WHERE LOWER(login) = LOWER(\"%s\") AND password = \"%s\"", login, password);
 
         try (Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query)){
-            if(resultSet.next()) {
+             ResultSet resultSet = statement.executeQuery(query)) {
+            if (resultSet.next()) {
                 return resultSet.getString("username");
             }
         } catch (SQLException e) {
+            logger.severe("Error finding Username by login and password! " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -47,12 +52,13 @@ public class SqliteDBConnection implements AutoCloseable {
 
         try (Statement statement = connection.createStatement()) {
             int linesChanged = statement.executeUpdate(query);
-            if(linesChanged == 1) {
+            if (linesChanged == 1) {
                 return true;
             }
         } catch (SQLException e) {
-        e.printStackTrace();
-    }
+            logger.warning("Error changing Username in DB! " +  e.getMessage());
+            e.printStackTrace();
+        }
         return false;
     }
 
@@ -62,6 +68,7 @@ public class SqliteDBConnection implements AutoCloseable {
         try {
             connection.close();
         } catch (SQLException e) {
+            logger.severe("Error closing connection with DB!" + e.getMessage());
             e.printStackTrace();
         }
     }
