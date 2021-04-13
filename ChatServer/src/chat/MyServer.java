@@ -11,6 +11,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class MyServer {
 
@@ -18,15 +20,16 @@ public class MyServer {
     private final AuthService authService;
     private final List<ClientHandler> clients = new ArrayList<>();
     private final List<String> connectedUsernamesList = new ArrayList<>();
+    private static final Logger logger = Logger.getLogger(MyServer.class.getName());
 
     public MyServer(int port) throws IOException {
         this.serverSocket = new ServerSocket(port);
         this.authService = new BaseAuthService();
-
     }
 
 
     public void start() throws IOException {
+        logger.info("Server is running!");
         System.out.println("Server is running!");
         authService.start();
 
@@ -35,6 +38,7 @@ public class MyServer {
                 waitAndAcceptNewClient();
             }
         } catch (IOException e) {
+            logger.severe("Failed to establish a new connection!  " + e.getMessage());
             System.out.println("Failed to establish a new connection!");
             e.printStackTrace();
         } finally {
@@ -45,6 +49,7 @@ public class MyServer {
     private void waitAndAcceptNewClient() throws IOException {
         System.out.println("Waiting for user connection...");
         Socket clientSocket = serverSocket.accept();
+        logger.info("User connected!");
         System.out.println("User connected!");
         clientConnectionProcessing(clientSocket);
     }

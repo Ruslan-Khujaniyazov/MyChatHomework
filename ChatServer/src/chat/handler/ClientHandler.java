@@ -14,6 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 public class ClientHandler {
 
@@ -28,6 +29,8 @@ public class ClientHandler {
     private boolean isAuthPassed = false;
 
     private final SqliteDBConnection sqliteDBConnection = SqliteDBConnection.getInstance();
+    public static final Logger logger = Logger.getLogger(ClientHandler.class.getName());
+
 
     public ClientHandler(MyServer myServer, Socket clientSocket) {
         this.myServer = myServer;
@@ -48,6 +51,7 @@ public class ClientHandler {
                         clientSocket.close();
                     }
                 } catch (IOException e) {
+                    logger.severe(e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -62,7 +66,7 @@ public class ClientHandler {
                 readMessage();
             } catch (IOException e) {
                 e.printStackTrace();
-                System.out.println(e.getMessage());
+                logger.severe(e.getMessage());
             }
         });
     }
@@ -84,6 +88,7 @@ public class ClientHandler {
 
             } else {
                 sendMessage(DataObject.authErrorData("Authorization error!"));
+                logger.info("Authorization error! User: " + this.username);
             }
         }
     }
@@ -93,6 +98,7 @@ public class ClientHandler {
             return (DataObject) in.readObject();
         } catch (ClassNotFoundException e) {
             String errorMessage = "Unknown object received";
+            logger.warning(errorMessage + " " + e.getMessage());
             System.err.println(errorMessage);
             e.printStackTrace();
             return null;
@@ -168,11 +174,15 @@ public class ClientHandler {
                     } else if (!sqliteDBConnection.changeUsernameInDB(username, newUsername)) {
                         sendMessage(DataObject.changeUsernameErrorData("Error changing username in Database"));
 
+                        String logMessage = String.format("Error changing username in Database by User \"%s\" to \"%s\" ", username, newUsername);
+                        logger.warning(logMessage);
+
                     } else {
                         sendMessage(DataObject.changeUsernameSuccessData(newUsername));
                         myServer.removeOldAndAddNewUsername(currentUsername, newUsername);
                         this.username = newUsername;
                         String message = String.format(">>> %s has changed the nickname to %s", currentUsername, newUsername);
+                        logger.info(message);
                         myServer.broadcastServerMessage(this, DataObject.serverMessageData(message));
 
                     }
@@ -183,10 +193,15 @@ public class ClientHandler {
                     ErrorDataObject clientErrorData = (ErrorDataObject) dataObject.getData();
                     String errorMessage = clientErrorData.getErrorMessage();
                     System.err.printf("Client side error:\n username: %s\n Error: %s", this.getUsername(), errorMessage);
+
+                    String logMessage = String.format("Client side error:\n username: %s\n Error: %s", this.getUsername(), errorMessage);
+                    logger.warning(logMessage);
+
                     break;
                 }
                 default:
-                    String errorMessage = "Unknown type of command" + dataObject.getType();
+                    String errorMessage = "Unknown object received" + dataObject.getType();
+                    logger.warning("Error reading message: " + errorMessage);
                     System.err.println(errorMessage);
                     sendMessage(DataObject.errorData(errorMessage));
             }
@@ -216,5 +231,8 @@ public class ClientHandler {
         in.close();
         out.close();
         clientSocket.close();
+
+        String logMessage = String.format("Connection closed. User \"%s\" disconnected.", this.username);
+        logger.warning(logMessage);
     }
 }
