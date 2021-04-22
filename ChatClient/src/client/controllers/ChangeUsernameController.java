@@ -1,12 +1,13 @@
 package client.controllers;
 
 import client.NetworkClient;
+import client.controllers.controllerCallbacks.ChangeUsernameCallback;
 import client.models.Network;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-public class ChangeUsernameController {
+public class ChangeUsernameController implements ChangeUsernameCallback {
 
     @FXML
     private TextField newUsernameField;
@@ -21,7 +22,7 @@ public class ChangeUsernameController {
 
 
     @FXML
-    private void changeUsername() {
+    public void changeUsername() {
         //network.setChangeUsernameController(this);
 
         String newUsername = newUsernameField.getText();
