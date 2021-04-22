@@ -5,6 +5,7 @@ import chatServerDataObjects.dataObjects.*;
 import client.NetworkClient;
 import client.controllers.ChangeUsernameController;
 import client.controllers.ChatController;
+import client.controllers.controllerCallbacks.ChangeUsernameCallback;
 import javafx.application.Platform;
 
 import java.io.*;
@@ -25,7 +26,7 @@ public class Network {
     private Socket socket;
     private String username;
 
-    private ChangeUsernameController changeUsernameController;
+    private ChangeUsernameCallback changeUsernameController;
 
     public Network() {
         this(SERVER_HOST, SERVER_PORT);
@@ -245,7 +246,7 @@ public class Network {
         return username;
     }
 
-    public void setChangeUsernameController(ChangeUsernameController changeUsernameController) {
+    public void setChangeUsernameController(ChangeUsernameCallback changeUsernameController) {
         this.changeUsernameController = changeUsernameController;
     }
 
