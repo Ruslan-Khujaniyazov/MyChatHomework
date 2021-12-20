@@ -1,3 +1,4 @@
 # MyChatHomework
-![ScreenSHot](/interface_screenshots/auth.png "Authentication window")
-![ScreenSHot](/interface_screenshots/chat_inteface.png "Chat's interface")
+![ScreenShot](/Interface_screenshots/auth.png "Authentication window")
+
+![ScreenShot](/Interface_screenshots/chat_interface.png "Chat's interface")
